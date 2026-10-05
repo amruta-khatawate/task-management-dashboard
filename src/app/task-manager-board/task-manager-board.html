@@ -1,0 +1,203 @@
+<div class="app-container">
+  <div class="container">
+
+    <div class="header-container">
+      <div class="userdetails">
+        <h2>{{title}}</h2>
+        <p>Hi!! Welcome back Username</p>
+      </div>
+      <div class="mode">
+        <img [src]="lightmodeurl" alt="Light mode icon" height="30">
+      </div>
+    </div>
+
+    <!-- <div class="statistic-container"> -->
+      <div class="statistic-cards">
+        <div class="statistic-card">
+          <p>TOTAL TASKS</p>
+          <h1>{{ tasks.length }}</h1>
+        </div>
+        <div class="statistic-card">
+          <p>COMPLETED</p>
+          <h1>{{ getCompletedTaskCount() }}</h1>
+        </div>
+        <div class="statistic-card">
+          <p>PENDING</p>
+          <h1>{{ getPendingTaskCount() }}</h1>
+        </div>
+        <div class="statistic-card">
+          <p>OVERDUE</p>
+          <h1>{{ getOverdueTaskCount() }}</h1>
+        </div>
+        <div class="statistic-card">
+          <p>COMPLETION RATE</p>
+          <h1 [style.color] = "getCompletionRate() > 70 ? '#10b981' : getCompletionRate() > 40 ? '#f59e0b' : '#ef4444'"> {{ getCompletionRate() }}% </h1>
+        </div>
+      </div>
+    <!-- </div> -->
+
+    <div class="actionbar-container">
+      <div class="action-fileds">
+        <div class="action">
+          <select [(ngModel)]="filterStatus">
+            <option value="All">All Statuses</option>
+            @for(status of statuses; track status){
+              <option [value]="status">{{ status }}</option>
+            }
+          </select>
+        </div>
+        <div class="action">
+          <select [(ngModel)]="filterCategory">
+            <option value="All">All Categories</option>
+            @for(category of categories; track category){
+              <option [value]="category">{{ category }}</option>
+            }
+          </select>
+        </div>
+        <div class="action">
+          <select [(ngModel)]="filterPriority">
+            <option value="All">All Priorities</option>
+            @for(prior of priorities; track prior){
+              <option [value]="prior">{{ prior }}</option>
+            }
+          </select>
+        </div>
+        <div class="action">
+          
+          <label for="completedtasks" for="completedtasks">
+            <input type="checkbox" id="completedtasks" [(ngModel)]="showCompleted">
+            Show All Completed Tasks
+          </label>
+        </div>
+      </div>
+    </div>
+
+    @switch(getProductivityrate()){
+      @case('Excellent'){
+        <div class="alertmessage-conatiner" style="background-color: #10b981;">
+          <p>[ EXCELLENT ] Keep up the great work!</p>
+        </div>
+        }
+        @case('Good'){
+          <div class="alertmessage-conatiner" style="background-color: #10b9819a;">
+            <p>[ GOOD ] You're making progress!</p>
+          </div>
+        }
+        @case('Average'){
+          <div class="alertmessage-conatiner" style="background-color: #f59f0b90;">
+            <p>[ AVERAGE ] Let's aim for improvement!</p>
+          </div>
+        }
+        @case('Poor'){
+          <div class="alertmessage-conatiner" style="background-color: #ef44448c;">
+            <p>[ ALERT ] Let's focus and get back on track!</p>
+          </div>
+        }
+      }
+
+    <div class="addtask-container">
+      <div class="addtask-header">
+        <h3>Add New Task</h3>
+      </div>
+        <form action="">
+          <div class="title-field field">
+            <label for="">Title <span style="color: red;">*</span></label>
+            <input type="text" name="" id="" placeholder="Enter task title">
+          </div>
+
+          <div class="catagory-field field">
+            <label for="">Category <span style="color: red;">*</span></label>
+            <select name="" id="">
+              <option value="All">Select Catagories</option>
+              @for(category of categories; track category){
+              <option value="Work">{{ category }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="priority-field field">
+            <label for="">Priority <span style="color: red;">*</span></label>
+            <select name="" id=""  >
+              <option value="Select Priority">Select Priority</option>
+              @for(prior of priorities; track prior){
+                <option value="High">{{ prior }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="duedate-field field">
+            <label for="">Due date <span style="color: red;">*</span></label>
+            <input type="date" name="" id="">
+          </div>
+
+          <div class="status-field field">
+            <label for="">Status</label>
+            <select name="" id="">
+              @for(status of statuses; track status){
+                <option [value]="status">{{ status }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="description-field">
+            <label for="">Description</label>
+            <textarea name="" id="" placeholder="Enter task decription (optional)"></textarea>
+          </div>
+
+           <div class="buttons-field">
+            <button>Add Task</button>
+            <button>Clear</button>
+          </div>
+
+        </form>
+    </div>
+
+    <div class="displaytask-container">
+      <div class="tasklistnumber">
+        <h3>Tasks</h3>
+        <p>showing {{ tasks.length }} tasks</p>
+      </div>
+      <hr>
+      <div class="tasks">
+        @for(task of tasks; track task){
+          <div class="taskcontain">
+            <div class="task">
+              <div class="checkbox">
+                <input type="checkbox">
+              </div>
+              <div class="task-details">
+                <div class="taskname-number">
+                  <div class="tasknumber">{{ task.id }}</div>
+                  <div class="taskname">{{ task.title }}</div>
+                </div>
+                <div class="task-desc">
+                  <p>{{ task.description }}</p>
+                </div>
+                <div class="task-subdetails">
+                  <div class="sub-task">
+                    <p>{{ task.category }}</p>
+                  </div>
+                  <div class="sub-task">
+                    <p>{{ task.status }}</p>
+                  </div>
+                  <div class="sub-task">
+                    <p>Due: {{ task.duedate | date:'MM/dd/yyyy' }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="actionbutton">
+                <button>Delete</button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="score-container">
+        <p>Your Productivity Score</p>
+        <h1>33%</h1>
+        <p>keep going! </p>
+    </div>
+  </div>
+</div>
