@@ -298,6 +298,12 @@ form .field > :nth-child(2){
   }
 }
 
+.error-message{
+  color: red;
+  font-size: 12px;
+}
+
+
 @media screen and (max-width: 730px){
   .task-subdetails{
      gap: 3px;
