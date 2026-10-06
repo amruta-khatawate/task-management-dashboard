@@ -28,6 +28,11 @@ export class TaskManagerBoard {
   lightmodeurl = '/light-mode-icon-removebg.png|';
   darkmodeurl = '/dark-mode-icon.png';
 
+  isInvalidTitle : any;
+  isInvalidCategory : any;
+  isInvalidPriority : any;
+  isInvalidDuedate : any;
+
   tasks : Task[] = [
     { 
       id: 1,
@@ -128,4 +133,34 @@ export class TaskManagerBoard {
     else return 'Poor';
   }
 
+  validateTitle($event: any) : void{
+    this.isInvalidTitle = true;
+    if($event.target.value !== '' ) {
+      this.isInvalidTitle = false;
+    }
+  }
+
+  validateCategory($event: any) : void{
+      this. isInvalidCategory = true;
+    if($event.target.value !== 'All'){
+      this.isInvalidCategory = false; 
+    }
+  }
+
+  validatePriority($event: any) : void{
+    this.isInvalidPriority = true;
+    if($event.target.value !== 'All' ) {
+      this.isInvalidPriority = false;
+    }
+  }
+
+  validateDate($event: any) : void{
+    this.isInvalidDuedate = true;
+    const current = new Date() ;
+    console.log(current);
+    if($event.target.value !== '' && $event.target.value >= current){
+      this.isInvalidDuedate = false;
+    }
+    console.log($event.target.value);
+  }
 }
