@@ -98,71 +98,72 @@
       <div class="addtask-header">
         <h3>Add New Task</h3>
       </div>
-        <form action="">
-          <div class="title-field field">
-            <label for="">Title <span style="color: red;">*</span></label>
-            <input type="text" placeholder="Enter task title" [(ngModel)]="newTask.title" 
-                 name="task-title" required (blur)="validateTitle($event)">
-            @if(isInvalidTitle){
-              <span class="error-message">*This field is required</span>
+      <form action="">
+        <div class="title-field field">
+          <label for="">Title <span style="color: red;">*</span></label>
+          <input type="text" placeholder="Enter task title" [(ngModel)]="newTask.title" 
+                name="task-title" required (blur)="validateTitle(newTask.title)">
+          @if(isInvalidTitle){
+            <span class="error-message">*This field is required</span>
+          }
+        </div>
+
+        <div class="catagory-field field">
+          <label for="">Category <span style="color: red;">*</span></label>
+          <select required (blur)="validateCategory(newTask.category)" [(ngModel)]="newTask.category" name="task-category">
+            <option value="" disabled>Select Catagories</option>
+            @for(category of categories; track category){
+            <option [value]="category">{{ category }}</option>
             }
-          </div>
+          </select>
+          @if(isInvalidCategory){
+            <span class="error-message">*Please select a category</span>
+          }
+        </div>
 
-          <div class="catagory-field field">
-            <label for="">Category <span style="color: red;">*</span></label>
-            <select required (blur)="validateCategory($event)">
-              <option value="All">Select Catagories</option>
-              @for(category of categories; track category){
-              <option [value]="category">{{ category }}</option>
-              }
-            </select>
-            @if(isInvalidCategory){
-              <span class="error-message">*Please select a category</span>
+        <div class="priority-field field">
+          <label for="">Priority <span style="color: red;">*</span></label>
+          <select required (blur)="validatePriority(newTask.priority)" [(ngModel)]="newTask.priority" name="task-priority" >
+            <option value="" disabled>Select Priority</option>
+            @for(prior of priorities; track prior){
+              <option [value]="prior">{{ prior }}</option>
             }
-          </div>
+          </select>
+          @if(isInvalidPriority){
+            <span class="error-message">*Please select a priority</span>
+          }
+        </div>
 
-          <div class="priority-field field">
-            <label for="">Priority <span style="color: red;">*</span></label>
-            <select required (blur)="validatePriority($event)">
-              <option value="All">Select Priority</option>
-              @for(prior of priorities; track prior){
-                <option [value]="prior">{{ prior }}</option>
-              }
-            </select>
-            @if(isInvalidPriority){
-              <span class="error-message">*Please select a priority</span>
+        <div class="duedate-field field">
+          <label for="">Due date <span style="color: red;">*</span></label>
+          <input type="date" required (blur)="validateDate(newTask.duedate)" [min]="today" format="dd-MM-yyyy" [(ngModel)]="newTask.duedate" name="task-duedate">
+          @if(isInvalidDuedate){
+            <span class="error-message">*Please select a due date</span>
+          }
+        </div>
+
+
+        <div class="status-field field">
+          <label for="">Status</label>
+          <select [(ngModel)]="newTask.status" name="task-status">
+            <option value="" disabled>Select Status</option>
+            @for(status of statuses; track status){
+              <option [value]="status">{{ status }}</option>
             }
-          </div>
+          </select>
+        </div>
 
-          <div class="duedate-field field">
-            <label for="">Due date <span style="color: red;">*</span></label>
-            <input type="date" required (blur)="validateDate($event)" [min]="today">
-            @if(isInvalidDuedate){
-              <span class="error-message">*due date cannot be in the past</span>
-            }
-          </div>
+        <div class="description-field">
+          <label for="">Description</label>
+          <textarea name="" id="" placeholder="Enter task decription (optional)"></textarea>
+        </div>
 
+        <div class="buttons-field">
+          <button (click)="addTask()">Add Task</button>
+          <button (click)="clearForm()">Clear</button>
+        </div>
 
-          <div class="status-field field">
-            <label for="">Status</label>
-            <select name="" id="">
-              @for(status of statuses; track status){
-                <option [value]="status">{{ status }}</option>
-              }
-            </select>
-          </div>
-
-          <div class="description-field">
-            <label for="">Description</label>
-            <textarea name="" id="" placeholder="Enter task decription (optional)"></textarea>
-          </div>
-
-           <div class="buttons-field">
-            <button>Add Task</button>
-            <button>Clear</button>
-          </div>
-
-        </form>
+      </form>
     </div>
 
     <div class="displaytask-container">
