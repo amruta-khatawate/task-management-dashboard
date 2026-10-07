@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 interface Task{
@@ -20,6 +20,7 @@ interface Task{
   imports: [FormsModule, CommonModule],
   templateUrl: './task-manager-board.html',
   styleUrl: './task-manager-board.css',
+  providers: [DatePipe]
 })
 
 export class TaskManagerBoard {
@@ -32,6 +33,10 @@ export class TaskManagerBoard {
   isInvalidCategory : any;
   isInvalidPriority : any;
   isInvalidDuedate : any;
+
+  today = this.formattedDate(new Date());
+
+  constructor(private datePipe: DatePipe) { }
 
   tasks : Task[] = [
     { 
@@ -154,13 +159,25 @@ export class TaskManagerBoard {
     }
   }
 
+
+  formattedDate(date: Date) : string{
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${day}-${month}-${year}`;
+  }
+
   validateDate($event: any) : void{
     this.isInvalidDuedate = true;
-    const current = new Date() ;
-    console.log(current);
-    if($event.target.value !== '' && $event.target.value >= current){
+    // when we use datePipe.transform() methods it turns it into formatted string.
+    const userDate =  this.datePipe.transform($event.target.value, 'dd-MM-yyyy');   
+
+    // console.log("User Date: ", userDate, typeof(userDate));
+    // console.log( "today Date: ", this.today,typeof(this.today));
+    
+
+    if(userDate !== '' && userDate !== null &&  userDate >= this.today){
       this.isInvalidDuedate = false;
     }
-    console.log($event.target.value);
   }
 }

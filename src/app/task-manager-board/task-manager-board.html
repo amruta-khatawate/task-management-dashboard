@@ -136,9 +136,9 @@
 
           <div class="duedate-field field">
             <label for="">Due date <span style="color: red;">*</span></label>
-            <input type="date" required (blur)="validateDate($event)">
+            <input type="date" required (blur)="validateDate($event)" [min]="today">
             @if(isInvalidDuedate){
-              <span class="error-message">*Please select a due date</span>
+              <span class="error-message">*due date cannot be in the past</span>
             }
           </div>
 
