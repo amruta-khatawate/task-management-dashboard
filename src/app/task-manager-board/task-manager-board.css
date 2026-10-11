@@ -211,16 +211,41 @@ form .field > :nth-child(2){
   width: 100%;
 }
 
-.taskcontain{
-  width: 100%;
-  background-color: rgba(255, 0, 0, 0.675);
-  border-radius: 10px;  
+.priority-Low{
+  border-left-color: #10b981 !important;
+  background: #f0fdf4 !important;
 }
+
+.priority-Medium{
+  border-left-color: #f59e0b !important;
+  background: #fffbeb !important;
+}
+
+.priority-High{
+  border-left-color: #ef4444 !important;
+  background: #fef2f2 !important;
+}
+
+.priority-Urgent{
+  border-left-color: #dc2626 !important;
+  background: #fee2e2 !important;
+  /* animation: pluse 2s infinite; */
+}
+
+@keyframes pluse{
+  0%, 100%{
+    opacity: 1;
+  }
+}
+
+.task-completed{
+  opacity: 0.5;
+}
+
 .task{
-  background-color: rgba(255, 255, 255, 0.826);
-  /* min-width: 90%; */
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.205);
+  border-left: 5px solid;
   display: grid;
   grid-template-columns: 30px auto 60px;
   margin-left: 5px;
@@ -235,6 +260,9 @@ form .field > :nth-child(2){
     height: 15px;
     width: 15px;
     cursor: pointer;
+  }
+  input:disabled{
+    cursor: not-allowed;
   }
 }
 

@@ -70,7 +70,7 @@ export class TaskManagerBoard {
       id: 4,
       title: 'Start DSA preparation', 
       category: 'Education',
-      priority: 'Medium', 
+      priority: 'Low', 
       duedate: new Date('12-31-2026'), 
       description: "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 
       status: 'Pending', 
@@ -168,11 +168,6 @@ export class TaskManagerBoard {
     this.isInvalidDuedate = !duedate;
   }
 
-  submitForm(){
-    console.log(this.newTask);
-    
-  }
-
   addTask() : void{
     if(!this.newTask.title || !this.newTask.category || !this.newTask.duedate ){
       return;
@@ -203,5 +198,34 @@ export class TaskManagerBoard {
     duedate: '',
     status: 'Pending'
   };
+  }
+
+  filteredTasks() : Task[]{
+    let filtered = [...this.tasks];
+
+    if(this.filterStatus !== 'All'){
+      filtered = filtered.filter(task => task.status === this.filterStatus);
+    }
+
+    if(this.filterCategory !== 'All'){
+      filtered = filtered.filter(task => task.category === this.filterCategory);
+    }
+
+    if(this.filterPriority !== 'All'){
+      filtered = filtered.filter(task => task.priority === this.filterPriority);
+    }
+
+    if(!this.showCompleted){
+      filtered = filtered.filter(task => task.status !== 'Completed');
+    }
+    // console.log(filtered);
+    return filtered;
+    
+  }
+
+  deleteTask(taskId: number): void{
+    let seletedTask = this.tasks.find(task => task.id === taskId);
+    this.tasks.pop();
+    console.log(seletedTask);
   }
 }

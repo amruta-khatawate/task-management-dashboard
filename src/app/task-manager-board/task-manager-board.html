@@ -98,7 +98,7 @@
       <div class="addtask-header">
         <h3>Add New Task</h3>
       </div>
-      <form action="">
+      <form>
         <div class="title-field field">
           <label for="">Title <span style="color: red;">*</span></label>
           <input type="text" placeholder="Enter task title" [(ngModel)]="newTask.title" 
@@ -155,11 +155,12 @@
 
         <div class="description-field">
           <label for="">Description</label>
-          <textarea name="" id="" placeholder="Enter task decription (optional)"></textarea>
+          <textarea placeholder="Enter task decription (optional)"></textarea>
         </div>
 
         <div class="buttons-field">
-          <button (click)="addTask()">Add Task</button>
+          <button id="add-task-button" (click)="addTask()" [disabled]="!newTask.title || !newTask.category || !newTask.duedate" 
+          [title] = "(!newTask.title || !newTask.category || !newTask.duedate) ? 'Please fill in required fields' : 'Add new task'">Add Task</button>
           <button (click)="clearForm()">Clear</button>
         </div>
 
@@ -169,19 +170,19 @@
     <div class="displaytask-container">
       <div class="tasklistnumber">
         <h3>Tasks</h3>
-        <p>showing {{ tasks.length }} tasks</p>
+        <p>showing {{ filteredTasks().length }} tasks</p>
       </div>
       <hr>
-      <div class="tasks">
-        @for(task of tasks; track task){
-          <div class="taskcontain">
-            <div class="task">
+      @if(filteredTasks().length > 0){
+        <div class="tasks">
+          @for(task of filteredTasks(); track task.id ; let i = $index){
+            <div class="task" [class]="'priority-' + task.priority" [class.task-completed]="task.status === 'Completed'" >
               <div class="checkbox">
-                <input type="checkbox">
+                <input type="checkbox" [disabled]="task.status === 'Completed'">
               </div>
               <div class="task-details">
                 <div class="taskname-number">
-                  <div class="tasknumber">{{ task.id }}</div>
+                  <div class="tasknumber">{{ i + 1 }}</div>
                   <div class="taskname">{{ task.title }}</div>
                 </div>
                 <div class="task-desc">
@@ -200,12 +201,12 @@
                 </div>
               </div>
               <div class="actionbutton">
-                <button>Delete</button>
+                <button (click)="deleteTask(task.id)">Delete</button>
               </div>
             </div>
-          </div>
-        }
-      </div>
+          }
+        </div>
+      }
     </div>
 
     <div class="score-container">
