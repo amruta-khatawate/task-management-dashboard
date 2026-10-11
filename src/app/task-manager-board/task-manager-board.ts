@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 interface Task{
-  id: number;
+  id: any;
   title: string;
   category: string;
   priority: string;
@@ -19,8 +19,7 @@ interface Task{
   selector: 'app-task-manager-board',
   imports: [FormsModule, CommonModule],
   templateUrl: './task-manager-board.html',
-  styleUrl: './task-manager-board.css',
-  providers: [DatePipe]
+  styleUrl: './task-manager-board.css'
 })
 
 export class TaskManagerBoard {
@@ -29,14 +28,12 @@ export class TaskManagerBoard {
   lightmodeurl = '/light-mode-icon-removebg.png|';
   darkmodeurl = '/dark-mode-icon.png';
 
-  isInvalidTitle : any;
-  isInvalidCategory : any;
-  isInvalidPriority : any;
-  isInvalidDuedate : any;
+  isInvalidTitle: boolean | undefined;
+  isInvalidCategory: boolean | undefined;
+  isInvalidPriority: boolean | undefined;
+  isInvalidDuedate: boolean | undefined;
 
-  today = this.formattedDate(new Date());
-
-  constructor(private datePipe: DatePipe) { }
+  today = this.toDateInputValue(new Date());
 
   tasks : Task[] = [
     { 
@@ -93,15 +90,15 @@ export class TaskManagerBoard {
     description : string,
     category: string,
     priority: string,
-    duedate: string | Date,
+    duedate: string,
     status: string
-  }  ={
+  }={
     title : '',
     description : '',
     category: '',
-    priority: 'medium',
+    priority: 'Medium',
     duedate: '',
-    status: 'pending'
+    status: 'Pending'
   };
 
 
@@ -138,46 +135,73 @@ export class TaskManagerBoard {
     else return 'Poor';
   }
 
-  validateTitle($event: any) : void{
+  validateTitle(title: any) : void{
     this.isInvalidTitle = true;
-    if($event.target.value !== '' ) {
+    if(title !== '' ) {
       this.isInvalidTitle = false;
     }
   }
 
-  validateCategory($event: any) : void{
+  validateCategory(category: any) : void{
       this. isInvalidCategory = true;
-    if($event.target.value !== 'All'){
+    if(category !== ''){
       this.isInvalidCategory = false; 
     }
   }
 
-  validatePriority($event: any) : void{
+  validatePriority(priority: any) : void{
     this.isInvalidPriority = true;
-    if($event.target.value !== 'All' ) {
+    if(priority !== '' ) {
       this.isInvalidPriority = false;
     }
   }
 
 
-  formattedDate(date: Date) : string{
+  private toDateInputValue(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    return `${day}-${month}-${year}`;
+    return `${year}-${month}-${day}`;
   }
 
-  validateDate($event: any) : void{
-    this.isInvalidDuedate = true;
-    // when we use datePipe.transform() methods it turns it into formatted string.
-    const userDate =  this.datePipe.transform($event.target.value, 'dd-MM-yyyy');   
+  validateDate(duedate: string): void {
+    this.isInvalidDuedate = !duedate;
+  }
 
-    // console.log("User Date: ", userDate, typeof(userDate));
-    // console.log( "today Date: ", this.today,typeof(this.today));
+  submitForm(){
+    console.log(this.newTask);
     
+  }
 
-    if(userDate !== '' && userDate !== null &&  userDate >= this.today){
-      this.isInvalidDuedate = false;
+  addTask() : void{
+    if(!this.newTask.title || !this.newTask.category || !this.newTask.duedate ){
+      return;
     }
+
+    const task: Task = {
+      id: this.tasks.length + 1,
+      title: this.newTask.title,
+      category: this.newTask.category,
+      priority: this.newTask.priority,
+      duedate: new Date(this.newTask.duedate),
+      description: this.newTask.description,
+      status: this.newTask.status,
+      createdAt: new Date()
+    };
+
+    this.tasks.push(task);
+    this.clearForm();
+  
+  }
+
+  clearForm(){
+    this.newTask ={
+    title : '',
+    description : '',
+    category: '',
+    priority: 'Medium',
+    duedate: '',
+    status: 'Pending'
+  };
   }
 }
