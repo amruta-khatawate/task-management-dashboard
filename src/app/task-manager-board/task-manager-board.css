@@ -146,10 +146,6 @@ form .field > :nth-child(2){
 }
 
 
-.buttons-field{
-  align-self: center;
-}
-
 .description-field{
   min-width: 100%;
   display: flex;
@@ -178,8 +174,19 @@ form .field > :nth-child(2){
     color: white;
     border-style: none;
     font-size: 15px;
+    cursor: pointer;
+  }
+  
+  #add-task-button:disabled{
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  button:hover{
+    background-color: rgba(140, 0, 255, 0.759);
   }
 }
+
+
 
 .displaytask-container{
   background-color: white;
