@@ -223,9 +223,27 @@ export class TaskManagerBoard {
     
   }
 
+  isOverDue(task : Task) : boolean{
+    return new Date(this.today) > task.duedate && task.status !== 'Completed';
+  }
+
   deleteTask(taskId: number): void{
-    let seletedTask = this.tasks.find(task => task.id === taskId);
-    this.tasks.pop();
-    console.log(seletedTask);
+    let index = this.tasks.findIndex(task => task.id === taskId)
+    if(index !== -1){
+      this.tasks.splice(index,1);
+    }
+  }
+
+  toggleCompletedTask(taskId: number): void{
+    let task = this.tasks.find(task => task.id === taskId)
+    if(task){
+      if(task.status === 'Completed'){
+        task.status = 'Pending';
+        delete task.completedAt;
+      }else{
+        task.status = 'Completed';
+        task.completedAt = new Date();
+      }
+    }
   }
 }
