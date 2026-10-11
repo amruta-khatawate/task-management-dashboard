@@ -186,8 +186,6 @@ form .field > :nth-child(2){
   }
 }
 
-
-
 .displaytask-container{
   background-color: white;
   height: fit-content;
@@ -229,18 +227,28 @@ form .field > :nth-child(2){
 .priority-Urgent{
   border-left-color: #dc2626 !important;
   background: #fee2e2 !important;
-  /* animation: pluse 2s infinite; */
+  animation: pluse 2s infinite;
 }
 
-@keyframes pluse{
-  0%, 100%{
-    opacity: 1;
-  }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
 }
 
 .task-completed{
-  opacity: 0.5;
+  opacity: 0.5 !important;
 }
+
+.task-completed .taskname {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+/* input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+} */
 
 .task{
   border-radius: 10px;
@@ -250,7 +258,17 @@ form .field > :nth-child(2){
   grid-template-columns: 30px auto 60px;
   margin-left: 5px;
   padding: 10px 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease,
+              box-shadow 0.2s ease;
 }
+
+
+.task:hover {
+  transform: scale(1.03);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
 
 .checkbox{
   display: flex;
@@ -260,9 +278,6 @@ form .field > :nth-child(2){
     height: 15px;
     width: 15px;
     cursor: pointer;
-  }
-  input:disabled{
-    cursor: not-allowed;
   }
 }
 
@@ -275,17 +290,57 @@ form .field > :nth-child(2){
   margin-top: 3px;
   display: flex;
   align-items: center;
-  gap: 18px;
-  .sub-task{
-    background-color: rgba(14, 83, 194, 0.412);
-    padding: 4px 6px;
-    border-radius: 10px;
-    font-size: 1rem;
-  } 
-  .sub-task:nth-last-child(1){
-    background-color: transparent;
-  }
+  gap: 4px;
 }
+
+.due-date{
+   font-size: 12px;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+ 
+.status-Pending {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+ 
+.status-In-Progress {
+  background: #fed7aa;
+  color: #92400e;
+}
+ 
+.status-Completed {
+  background: #bbf7d0;
+  color: #14532d;
+}
+ 
+.status-Cancelled {
+  background: #fecaca;
+  color: #7f1d1d;
+}
+
+.category-tag {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  background: #e2e8f0;
+  color: #475569;
+  display: inline-block;
+}
+
+.category-Work { background: #dbeafe; color: #1e40af; }
+.category-Personal { background: #e9d5ff; color: #6b21a8; }
+.category-Shopping { background: #fce7f3; color: #9f1239; }
+.category-Health { background: #d1fae5; color: #065f46; }
+.category-Finance { background: #fef3c7; color: #78350f; }
+.category-Education { background: #e0e7ff; color: #312e81; }
+.category-Other { background: #f3f4f6; color: #374151; }
 
 
 .taskname-number{
@@ -344,7 +399,7 @@ form .field > :nth-child(2){
      gap: 3px;
     .sub-task{
       p{
-        font-size: 2vw;
+        font-size: 12px;
         white-space: nowrap;
       }
     }
@@ -365,7 +420,7 @@ form .field > :nth-child(2){
       padding: 0px 2px;
       border-radius: 10px;
       p{
-        font-size: 2vw;
+         font-size: 12px;
         white-space: nowrap;
       }
     }
