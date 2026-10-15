@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface Task{
+import { StatisticService } from '../services/statistic-service'
+import { TaskService } from '../services/task-service'
+ 
+export interface Task{
   id: any;
   title: string;
   category: string;
@@ -23,10 +25,14 @@ interface Task{
 })
 
 export class TaskManagerBoard {
+
+  private taskService : TaskService = inject(TaskService);
+  // constructor(private statisticService : StatisticService){}
+
   title : string = "Task manager";
   // lightmodeurl = '/light-mode-icon.jpg';
-  lightmodeurl = '/light-mode-icon-removebg.png|';
-  darkmodeurl = '/dark-mode-icon.png';
+  // lightmodeurl = '/light-mode-icon-removebg.png|';
+  // darkmodeurl = '/dark-mode-icon.png';
 
   isInvalidTitle: boolean | undefined;
   isInvalidCategory: boolean | undefined;
@@ -35,48 +41,11 @@ export class TaskManagerBoard {
 
   today = this.toDateInputValue(new Date());
 
-  tasks : Task[] = [
-    { 
-      id: 1,
-      title: 'Completed Angular task', 
-      category: 'Educational',
-      priority: 'High', 
-      duedate: new Date('09-08-2027'), 
-      description: "finish it before 31st of august", 
-      status: 'In-Progress', 
-      createdAt: new Date('08-23-2026')
-    },
-    { 
-      id: 2,
-      title: 'Buy groceries', 
-      category: 'Personal',
-      priority: 'Medium', 
-      duedate: new Date('08-26-2026'), 
-      description: "Milk, bread, kanda", 
-      status: 'Cancelled', 
-      createdAt: new Date('02-08-2026')
-    },
-    { 
-      id: 3,
-      title: 'Manageral round', 
-      category: 'Work',
-      priority: 'Urgent', 
-      duedate: new Date('04-10-2026'), 
-      description: "book a ticket to bangalore and prepare for interview", 
-      status: 'Completed', 
-      createdAt: new Date('03-10-2026')
-    },
-    { 
-      id: 4,
-      title: 'Start DSA preparation', 
-      category: 'Education',
-      priority: 'Low', 
-      duedate: new Date('12-31-2026'), 
-      description: "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", 
-      status: 'Pending', 
-      createdAt: new Date('04-10-2026')
-    },
-  ]
+  // filter controls
+  filterStatus : string ='All';
+  filterCategory: string ='All';
+  filterPriority : string = 'All';
+  showCompleted : boolean = true;
 
   // Dropdown options
 
@@ -101,30 +70,22 @@ export class TaskManagerBoard {
     status: 'Pending'
   };
 
-
-  // filter controls
-  filterStatus : string ='All';
-  filterCategory: string ='All';
-  filterPriority : string = 'All';
-  showCompleted : boolean = true;
-
-
   //methods
   getCompletedTaskCount() : number{
-    return this.tasks.filter(task => task.status === 'Completed').length;
+    return this.taskService.getTasks().filter(task => task.status === 'Completed').length;
   }
 
   getPendingTaskCount() : number{
-    return this.tasks.filter(task => task.status === 'Pending').length;
+    return this.taskService.getTasks().filter(task => task.status === 'Pending').length;
   }
 
   getOverdueTaskCount() : number{
-   return this.tasks.filter(task => task.duedate < new Date() && task.status !== 'Completed').length;
+   return this.taskService.getTasks().filter(task => task.duedate < new Date() && task.status !== 'Completed').length;
   }
 
   getCompletionRate() : number {
     if(this.getCompletedTaskCount() === 0) return 0;
-    return Math.round((this.getCompletedTaskCount() / this.tasks.length) * 100);
+    return Math.round((this.getCompletedTaskCount() / this.taskService.getTasks().length) * 100);
   }
 
   getProductivityrate() : string {
@@ -168,13 +129,17 @@ export class TaskManagerBoard {
     this.isInvalidDuedate = !duedate;
   }
 
+  getTask() : Task[] {
+    return this.taskService.getTasks();
+  }
+
   addTask() : void{
     if(!this.newTask.title || !this.newTask.category || !this.newTask.duedate ){
       return;
     }
 
     const task: Task = {
-      id: this.tasks.length + 1,
+      id: this.taskService.getTasks().length + 1, // Need to modify
       title: this.newTask.title,
       category: this.newTask.category,
       priority: this.newTask.priority,
@@ -184,7 +149,7 @@ export class TaskManagerBoard {
       createdAt: new Date()
     };
 
-    this.tasks.push(task);
+    this.taskService.addTask(task);
     this.clearForm();
   
   }
@@ -201,7 +166,7 @@ export class TaskManagerBoard {
   }
 
   filteredTasks() : Task[]{
-    let filtered = [...this.tasks];
+    let filtered = [...this.taskService.getTasks()];
 
     if(this.filterStatus !== 'All'){
       filtered = filtered.filter(task => task.status === this.filterStatus);
@@ -220,7 +185,6 @@ export class TaskManagerBoard {
     }
     // console.log(filtered);
     return filtered;
-    
   }
 
   isOverDue(task : Task) : boolean{
@@ -228,22 +192,11 @@ export class TaskManagerBoard {
   }
 
   deleteTask(taskId: number): void{
-    let index = this.tasks.findIndex(task => task.id === taskId)
-    if(index !== -1){
-      this.tasks.splice(index,1);
-    }
+    this.taskService.deleteTask(taskId);
   }
 
   toggleCompletedTask(taskId: number): void{
-    let task = this.tasks.find(task => task.id === taskId)
-    if(task){
-      if(task.status === 'Completed'){
-        task.status = 'Pending';
-        delete task.completedAt;
-      }else{
-        task.status = 'Completed';
-        task.completedAt = new Date();
-      }
-    }
+    this.taskService.toggleCompletedtask(taskId);
   }
+
 }
