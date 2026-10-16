@@ -25,10 +25,11 @@ export interface Task{
 })
 
 export class TaskManagerBoard {
-
+  
   private taskService : TaskService = inject(TaskService);
-  // constructor(private statisticService : StatisticService){}
-
+  private statisticService : StatisticService = inject(StatisticService);
+  
+  
   title : string = "Task manager";
   // lightmodeurl = '/light-mode-icon.jpg';
   // lightmodeurl = '/light-mode-icon-removebg.png|';
@@ -40,12 +41,6 @@ export class TaskManagerBoard {
   isInvalidDuedate: boolean | undefined;
 
   today = this.toDateInputValue(new Date());
-
-  // filter controls
-  filterStatus : string ='All';
-  filterCategory: string ='All';
-  filterPriority : string = 'All';
-  showCompleted : boolean = true;
 
   // Dropdown options
 
@@ -71,6 +66,38 @@ export class TaskManagerBoard {
   };
 
   //methods
+  get filterStatus() : string{
+    return this.statisticService.getStatusFilter();
+  }
+
+  set filterStatus(status: string) {
+    this.statisticService.setStatusFilter(status);
+  }
+
+  get filterCategory() : string{
+    return this.statisticService.getCategoryFilter();
+  }
+
+  set filterCategory(category: string) {
+    this.statisticService.setCategoryFilter(category);
+  }
+
+  get filterPriority() : string{
+    return this.statisticService.getPriorityFilter();
+  }
+
+  set filterPriority(priority: string) {
+    this.statisticService.setPriorityFilter(priority);
+  }
+
+  get showCompleted() : boolean{
+    return this.statisticService.getCompletedFilter();
+  }
+
+  set showCompleted(val: boolean) {
+    this.statisticService.setCompletedFilter(val);
+  }
+
   getCompletedTaskCount() : number{
     return this.taskService.getTasks().filter(task => task.status === 'Completed').length;
   }
@@ -166,25 +193,7 @@ export class TaskManagerBoard {
   }
 
   filteredTasks() : Task[]{
-    let filtered = [...this.taskService.getTasks()];
-
-    if(this.filterStatus !== 'All'){
-      filtered = filtered.filter(task => task.status === this.filterStatus);
-    }
-
-    if(this.filterCategory !== 'All'){
-      filtered = filtered.filter(task => task.category === this.filterCategory);
-    }
-
-    if(this.filterPriority !== 'All'){
-      filtered = filtered.filter(task => task.priority === this.filterPriority);
-    }
-
-    if(!this.showCompleted){
-      filtered = filtered.filter(task => task.status !== 'Completed');
-    }
-    // console.log(filtered);
-    return filtered;
+   return this.statisticService.getFilteredTasks();
   }
 
   isOverDue(task : Task) : boolean{
