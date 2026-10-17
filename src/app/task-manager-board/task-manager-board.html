@@ -134,7 +134,7 @@
         <label for="">Due date <span style="color: red;">*</span></label>
         <input type="date" required (blur)="validateDate(newTask.duedate)" [min]="today" format="dd-MM-yyyy" [(ngModel)]="newTask.duedate" name="task-duedate">
         @if(isInvalidDuedate){
-          <span class="error-message">*Please select a due date</span>
+          <span class="error-message">*Due date can not be a past date or empty </span>
         }
       </div>
 
@@ -155,7 +155,7 @@
       </div>
 
       <div class="buttons-field">
-        <button id="add-task-button" (click)="addTask()" [disabled]="!newTask.title || !newTask.category || !newTask.duedate" 
+        <button id="add-task-button" (click)="addTask()" [disabled]="isInvalidTitle  || isInvalidCategory  || isInvalidDuedate" 
         [title] = "(!newTask.title || !newTask.category || !newTask.duedate) ? 'Please fill in required fields' : 'Add new task'">Add Task</button>
         <button (click)="clearForm()">Clear</button>
       </div>
