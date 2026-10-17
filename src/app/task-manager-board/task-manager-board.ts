@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { StatisticService } from '../services/statistic-service'
-import { TaskService } from '../services/task-service'
+import { StatisticService } from '../services/statistic-service';
+import { TaskService } from '../services/task-service';
+import { FilterService } from '../services/filter-service';
  
 export interface Task{
   id: any;
@@ -27,8 +28,8 @@ export interface Task{
 export class TaskManagerBoard {
   
   private taskService : TaskService = inject(TaskService);
-  private statisticService : StatisticService = inject(StatisticService);
-  
+  private statisticService : StatisticService = inject(StatisticService);  
+  private filterService : FilterService = inject(FilterService);
   
   title : string = "Task manager";
   // lightmodeurl = '/light-mode-icon.jpg';
@@ -65,7 +66,7 @@ export class TaskManagerBoard {
     status: 'Pending'
   };
 
-  //methods
+  //getter and setter methods
   get filterStatus() : string{
     return this.statisticService.getStatusFilter();
   }
@@ -98,29 +99,25 @@ export class TaskManagerBoard {
     this.statisticService.setCompletedFilter(val);
   }
 
+  //Statistics count methods 
   getCompletedTaskCount() : number{
-    return this.taskService.getTasks().filter(task => task.status === 'Completed').length;
+    return this.filterService.completedTaskCount();
   }
 
   getPendingTaskCount() : number{
-    return this.taskService.getTasks().filter(task => task.status === 'Pending').length;
+    return this.filterService.pendingTaskCount();
   }
 
   getOverdueTaskCount() : number{
-   return this.taskService.getTasks().filter(task => task.duedate < new Date() && task.status !== 'Completed').length;
+   return this.filterService.overdueTaskCount();
   }
 
   getCompletionRate() : number {
-    if(this.getCompletedTaskCount() === 0) return 0;
-    return Math.round((this.getCompletedTaskCount() / this.taskService.getTasks().length) * 100);
+    return this.filterService.completionRate()
   }
 
   getProductivityrate() : string {
-    const rate = this.getCompletionRate();
-    if(rate >= 80) return 'Excellent';
-    else if(rate >= 60) return 'Good';
-    else if(rate >= 40) return 'Average';
-    else return 'Poor';
+    return this.filterService.productivityRate();
   }
 
   validateTitle(title: any) : void{
@@ -153,7 +150,12 @@ export class TaskManagerBoard {
   }
 
   validateDate(duedate: string): void {
-    this.isInvalidDuedate = !duedate;
+    this.isInvalidDuedate = true;
+    
+    if(duedate != '' && duedate > this.today){
+      this.isInvalidDuedate = false;
+    }
+
   }
 
   getTask() : Task[] {
@@ -161,7 +163,7 @@ export class TaskManagerBoard {
   }
 
   addTask() : void{
-    if(!this.newTask.title || !this.newTask.category || !this.newTask.duedate ){
+    if(this.isInvalidTitle  || this.isInvalidCategory  || this.isInvalidDuedate){
       return;
     }
 
