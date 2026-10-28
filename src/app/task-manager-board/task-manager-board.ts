@@ -180,7 +180,8 @@ export class TaskManagerBoard {
 
     this.taskService.addTask(task);
     this.clearForm();
-  
+    console.log(task);
+    
   }
 
   clearForm(){
@@ -204,6 +205,8 @@ export class TaskManagerBoard {
 
   deleteTask(taskId: number): void{
     this.taskService.deleteTask(taskId);
+    console.log(this.taskService.getTasks());
+    
   }
 
   toggleCompletedTask(taskId: number): void{

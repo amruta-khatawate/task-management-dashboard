@@ -192,7 +192,7 @@
                   <p>{{ task.status }}</p>
                 </div>
                 <div class="due-date">
-                  <p [style.color]="isOverDue(task) ? '#ef4444' : '#64748b'">Due: {{ task.duedate | date:'MM/dd/yyyy' }}</p>
+                  <p [style.color]="isOverDue(task) ? '#ef4444' : '#64748b'">Due: {{ task.duedate | date:'EEE, dd-MMM-yy' }}</p>
                 </div>
               </div>
             </div>
