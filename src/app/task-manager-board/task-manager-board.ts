@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StatisticService } from '../services/statistic-service';
 import { TaskService } from '../services/task-service';
 import { FilterService } from '../services/filter-service';
+import { TaskApiService } from '../services/task-api-service';
  
 export interface Task{
   id: any;
@@ -25,11 +26,12 @@ export interface Task{
   styleUrl: './task-manager-board.css'
 })
 
-export class TaskManagerBoard {
+export class TaskManagerBoard implements OnInit{
   
   private taskService : TaskService = inject(TaskService);
   private statisticService : StatisticService = inject(StatisticService);  
   private filterService : FilterService = inject(FilterService);
+  private taskApiService : TaskApiService = inject(TaskApiService);
   
   title : string = "Task manager";
   // lightmodeurl = '/light-mode-icon.jpg';
@@ -65,6 +67,17 @@ export class TaskManagerBoard {
     duedate: '',
     status: 'Pending'
   };
+
+
+
+  ngOnInit() : void{
+    this.taskApiService.getAllTasks().subscribe(
+      (response : Task[]) => {
+        this.taskService.setTask(response);
+      }
+    )
+  }
+
 
   //getter and setter methods
   get filterStatus() : string{
